@@ -15,7 +15,7 @@
     "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-router": "~5.0.0",
+    "@=-plugin-router": "~5.0.0",
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^8.53.0",

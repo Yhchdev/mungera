@@ -16,14 +16,13 @@
       </el-select>
       <el-select
         v-model="inputQ"
-        multiple
         filterable
         remote
         reserve-keyword
         placeholder="请输代码、名称或拼音缩写"
         :remote-method="remoteMethod"
         :loading="loading"
-        style="width: 30%;"
+        style="width: 30%;margin-right: 20px"
       >
         <el-option
           v-for="item in options"
@@ -80,7 +79,7 @@ const remoteMethod = (query) => {
 const searchFun=()=>{
   router.push({
     path: "/pic",
-    query: { id: inputQ.value[0], quarter: quarter.value },
+    query: { id: inputQ.value, quarter: quarter.value },
   });
 }
 
