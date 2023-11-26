@@ -22,7 +22,7 @@
         placeholder="请输代码、名称或拼音缩写"
         :remote-method="remoteMethod"
         :loading="loading"
-        style="width: 30%;margin-right: 20px"
+        style="width: 30%; margin-right: 20px"
       >
         <el-option
           v-for="item in options"
@@ -31,7 +31,15 @@
           :value="item.value"
         />
       </el-select>
-      <el-button :icon="Search" type="primary" @click="searchFun">搜索</el-button>
+      <el-button :icon="Search" type="primary" @click="searchFun"
+        >搜索</el-button
+      >
+    </div>
+    <div class="hot">
+      <p>热门股票</p>
+      <span v-for="(item, index) in hotList" :key="index" @click="click(item)">{{
+        item.label
+      }} </span>
     </div>
   </main>
 </template>
@@ -41,6 +49,8 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { Search } from "@element-plus/icons-vue";
+import { hostname } from "../../env";
+
 const router = useRouter();
 const options = ref([]);
 const inputQ = ref();
@@ -53,10 +63,24 @@ const quarterList = ref([
 ]);
 const quarter = ref("年报");
 
-onMounted(() => {});
+onMounted(() => {
+  getHot();
+});
+const hotList = ref([]);
+const getHot = () => {
+  axios
+    .get(`${hostname}/hot_stock`) // 替换为您的API端点
+    .then((res) => {
+      hotList.value = res.data.stocks;
+      console.log(hotList.value, "ddddddddd");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+};
 const getList = (param) => {
   axios
-    .get(`http://192.168.1.6:9000/search?keyword=${param}`) // 替换为您的API端点
+    .get(`${hostname}/search?keyword=${param}`) // 替换为您的API端点
     .then((res) => {
       options.value = res.data.stocks;
     })
@@ -76,23 +100,47 @@ const remoteMethod = (query) => {
   }
 };
 
-const searchFun=()=>{
+const searchFun = () => {
+  if (!inputQ.value) return;
   router.push({
     path: "/pic",
     query: { id: inputQ.value, quarter: quarter.value },
   });
+};
+const click=(i)=>{
+  router.push({
+    path: "/pic",
+    query: { id: i.value, quarter:'年报' },
+  });
 }
-
 </script>
 
 <style lang="scss" scoped>
 main {
+  width: 50%;
+  // height: 100%;
   display: flex;
-  justify-content: center;
-  height: 100%;
-  margin-top: 10%;
+  flex-direction: column;
+  align-items: center;
 }
 .search {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 100px;
+  // margin-top: 10%;
+}
+.hot {
+  height: 10%;
+  // width: 50%;
+  p {
+    height: 40px;
+    line-height: 40px;
+  }
+  span {
+    display: inline-block;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
 }
 </style>

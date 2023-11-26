@@ -32,7 +32,7 @@
     loadingP.value = true;
     axios
       .get(
-        `http://192.168.1.6:9000/chart?secucode=${picIndex.value}&report=${quarter.value}`
+        `http://192.168.1.7:9000/chart?secucode=${picIndex.value}&report=${quarter.value}`
       ) // 替换为您的API端点
       .then((response) => {
         chartData.value = response.data; // 将获取到的数据存储到chartData中

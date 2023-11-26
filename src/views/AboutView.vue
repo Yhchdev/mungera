@@ -1,12 +1,14 @@
 <template>
   <div class="about">
-    <PicSection v-for="(item,index) in chartData" :key="index+'pic'" :list='item' ref="chartDom1"  ></PicSection>
+    <PicSection v-for="(item,index) in chartData" :key="index+'pic'" :list='item' :xtitle="xtitle" ref="chartDom1"  ></PicSection>
   </div>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import PicSection from "../components/PicSection";
 import axios from "axios";
+import {hostname} from "../../env";
+
 import * as echarts from "echarts";
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -22,16 +24,17 @@ onMounted(() => {
   fetchData();
 });
 const chartDom1 = ref(null);
-
+const xtitle=ref(null)
 const fetchData = () => {
   loadingP.value = true;
   axios
     .get(
-      `http://192.168.1.6:9000/chart?secucode=${picIndex.value}&report=${quarter.value}`
+      `${hostname}/chart?secucode=${picIndex.value}&report=${quarter.value}`
     ) // 替换为您的API端点
     .then((response) => {
-      chartData.value = response.data.charts; // 将获取到的数据存储到chartData中
-      console.log(chartData.value,'chartData.value');
+      chartData.value = response.data.stock_charts.charts; // 将获取到的数据存储到chartData中
+      xtitle.value=response.data.stock_charts.x
+      console.log(xtitle,'xtitle');
       // renderChart(); // 数据获取成功后调用渲染图表的方法
       loadingP.value = false;
     })

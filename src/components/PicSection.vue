@@ -15,6 +15,7 @@ const chartDom1 = ref(null);
 const title1 = ref();
 const props = defineProps({
   list: null,
+  xtitle: null,
 });
 const chartData = computed(() => {
   return props.list;
@@ -51,11 +52,17 @@ const renderChart = () => {
     //   left: "8%",
     // },
     legend: {
-      data: [chartData.value.series[0].name, chartData.value.series[1].name],
+      data: (() => {
+        let data = [];
+        chartData.value.series.forEach((i) => {
+          data.push(i.name);
+        });
+        return data;
+      })(),
     },
     xAxis: {
       type: "category",
-      data: chartData.value.series[0].x,
+      data: props.xtitle,
     },
     yAxis: [
       {
@@ -67,26 +74,26 @@ const renderChart = () => {
         type: "value",
       },
     ],
-    series: [
-      {
-        name: chartData.value.series[0].name,
-        data: chartData.value.series[0].y,
-        type: chartData.value.series[0].type,
-        yAxisIndex: "0", // 牛逼，共用x轴
-      },
-      {
-        name: chartData.value.series[1].name,
-        data: chartData.value.series[1].y,
-        type: chartData.value.series[1].type,
-      },
-    ],
+    series: (() => {
+      let series = [];
+      chartData.value.series.forEach((i) => {
+        series.push({
+          name: i.name,
+          data: i.y,
+          type: i.type,
+          yAxisIndex: "0", // 牛逼，共用x轴
+          stack: i.stack,
+          emphasis:i.emphasis,
+        });
+      });
+      return series;
+    })(),
   };
 
   chart1.setOption(option1);
 
   window.addEventListener("resize", function () {
     chart1.resize();
-
   });
 };
 </script>
