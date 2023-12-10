@@ -5,7 +5,7 @@
         v-model="quarter"
         value-key="value"
         placeholder="Select"
-        style="width: 100px; margin-right: 20px"
+        class="selectcss"
       >
         <el-option
           v-for="item in quarterList"
@@ -22,7 +22,7 @@
         placeholder="请输代码、名称或拼音缩写"
         :remote-method="remoteMethod"
         :loading="loading"
-        style="width: 30%; margin-right: 20px"
+        class="selectcss2"
       >
         <el-option
           v-for="item in options"
@@ -36,10 +36,10 @@
       >
     </div>
     <div class="hot">
-      <p>热门股票</p>
-      <span v-for="(item, index) in hotList" :key="index" @click="click(item)">{{
-        item.label
-      }} </span>
+      <h3>热门股票</h3>
+      <span v-for="(item, index) in hotList" :key="index" @click="click(item)"
+        >{{ item.label }}
+      </span>
     </div>
   </main>
 </template>
@@ -107,33 +107,59 @@ const searchFun = () => {
     query: { id: inputQ.value, quarter: quarter.value },
   });
 };
-const click=(i)=>{
+const click = (i) => {
   router.push({
     path: "/pic",
-    query: { id: i.value, quarter:'年报' },
+    query: { id: i.value, quarter: "年报" },
   });
-}
+};
 </script>
-
 <style lang="scss" scoped>
 main {
   width: 50%;
-  // height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+.selectcss {
+  width:20%;
+  margin-right: 2%;
+}
+.selectcss2 {
+  width:40%;
+  margin-right: 2%;
+
+}
+@media screen and (max-width: 960px) {
+  main {
+    width: 70%;
+  }
+  .selectcss {
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  main {
+    width: 80%;
+  }
+  .selectcss {
+    width: 30%;
+  }
+}
+
 .search {
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding-top: 100px;
-  // margin-top: 10%;
+  margin-bottom: 10%;
 }
 .hot {
   height: 10%;
   // width: 50%;
-  p {
+  h3 {
     height: 40px;
     line-height: 40px;
   }
@@ -141,6 +167,10 @@ main {
     display: inline-block;
     padding: 5px 10px;
     cursor: pointer;
+  color: #409EFF;
+  text-decoration: underline;
+  
+
   }
 }
 </style>

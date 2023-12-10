@@ -66,12 +66,13 @@ const renderChart = () => {
     },
     yAxis: [
       {
-        name: "",
-        type: "value",
-      },
-      {
-        name: "",
-        type: "value",
+        type: (() => {
+          let type;
+          chartData.value.series.forEach((i) => {
+            type = i.YType;
+          });
+          return type;
+        })(),
       },
     ],
     series: (() => {
@@ -83,7 +84,7 @@ const renderChart = () => {
           type: i.type,
           yAxisIndex: "0", // 牛逼，共用x轴
           stack: i.stack,
-          emphasis:i.emphasis,
+          emphasis: i.emphasis,
         });
       });
       return series;
