@@ -22,6 +22,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .home{
+  width: 100%;
+  padding: 0;
+  margin: 0;
   height: 100%;
   display: flex;
   flex-direction: column;

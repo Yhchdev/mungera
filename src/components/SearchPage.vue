@@ -1,47 +1,59 @@
 <template>
-  <main>
-    <div class="search">
-      <el-select
-        v-model="quarter"
-        value-key="value"
-        placeholder="Select"
-        class="selectcss"
-      >
-        <el-option
-          v-for="item in quarterList"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <el-select
-        v-model="inputQ"
-        filterable
-        remote
-        reserve-keyword
-        placeholder="请输代码、名称或拼音缩写"
-        :remote-method="remoteMethod"
-        :loading="loading"
-        class="selectcss2"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <el-button :icon="Search" type="primary" @click="searchFun"
-        >搜索</el-button
-      >
+  <div class="page">
+    <main>
+      <div class="icon">
+        <img src="../assets/icon.jpg" alt="" />
+      </div>
+      <div class="search">
+        <el-select
+          v-model="quarter"
+          value-key="value"
+          placeholder="Select"
+          class="selectcss"
+        >
+          <el-option
+            v-for="item in quarterList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          v-model="inputQ"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="请输代码、名称或拼音缩写"
+          :remote-method="remoteMethod"
+          :loading="loading"
+          class="selectcss2"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-button :icon="Search" type="primary" @click="searchFun"
+          >搜索</el-button
+        >
+      </div>
+      <div class="hot">
+        <h3>热门股票</h3>
+        <span v-for="(item, index) in hotList" :key="index" @click="click(item)"
+          >{{ item.label }}
+        </span>
+      </div>
+    </main>
+    <div class="footer">
+      <a href="https://beian.miit.gov.cn/">滇ICP备19002959号-2</a>
+      <a class="call" href="https://xueqiu.com/u/1346959439">
+        <span>联系识牛股</span>
+        <div class="img"><img src="../assets/snow.png" alt="" /></div>
+      </a>
     </div>
-    <div class="hot">
-      <h3>热门股票</h3>
-      <span v-for="(item, index) in hotList" :key="index" @click="click(item)"
-        >{{ item.label }}
-      </span>
-    </div>
-  </main>
+  </div>
 </template>
 
 <script setup>
@@ -72,7 +84,6 @@ const getHot = () => {
     .get(`${hostname}/hot_stock`) // 替换为您的API端点
     .then((res) => {
       hotList.value = res.data.stocks;
-      console.log(hotList.value, "ddddddddd");
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -113,8 +124,25 @@ const click = (i) => {
     query: { id: i.value, quarter: "年报" },
   });
 };
+
 </script>
 <style lang="scss" scoped>
+.icon {
+  width: 220px;
+  height: 150px;
+  margin-top: 10%;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.page {
+  width: 100%;
+  height: calc(100% - 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 main {
   width: 50%;
   height: 100%;
@@ -123,13 +151,12 @@ main {
   align-items: center;
 }
 .selectcss {
-  width:20%;
+  width: 20%;
   margin-right: 2%;
 }
 .selectcss2 {
-  width:40%;
+  width: 40%;
   margin-right: 2%;
-
 }
 @media screen and (max-width: 960px) {
   main {
@@ -153,7 +180,7 @@ main {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding-top: 100px;
+  padding-top: 10px;
   margin-bottom: 10%;
 }
 .hot {
@@ -167,10 +194,41 @@ main {
     display: inline-block;
     padding: 5px 10px;
     cursor: pointer;
-  color: #409EFF;
-  text-decoration: underline;
-  
-
+    color: #409eff;
+    text-decoration: underline;
+  }
+}
+.footer {
+  width: 100%;
+  height: 52px;
+  background-color: #abb4bb;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  .call {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    .img {
+      width: 16px;
+      height: 16px;
+      img {
+        width: 100%;
+        height: 100%;
+        margin-left: 5px;
+      }
+    }
+  }
+  a {
+    margin-right: 10px;
   }
 }
 </style>

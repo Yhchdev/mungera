@@ -1,13 +1,21 @@
 <template>
-  <div class="about">
-    <PicSection v-for="(item,index) in chartData" :key="index+'pic'" :list='item' :xtitle="xtitle" ref="chartDom1"  ></PicSection>
+  <div class="about" ref="aboutDom" @scroll="handleScroll" >
+    <PicSection
+      v-for="(item, index) in chartData"
+      :key="index + 'pic'"
+      :list="item"
+      :xtitle="xtitle"
+    ></PicSection>
   </div>
+  <TipPage @updateVisible="isshowTip" :showTip="showTip"></TipPage>
 </template>
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import PicSection from "../components/PicSection";
+import TipPage from "../components/TipPage";
+
 import axios from "axios";
-import {hostname} from "../../env";
+import { hostname } from "../../env";
 
 import * as echarts from "echarts";
 import { useRoute } from "vue-router";
@@ -20,21 +28,31 @@ const quarter = computed(() => {
   return route.query.quarter;
 });
 const loadingP = ref(false);
+const ifSee = ref(false);
 onMounted(() => {
   fetchData();
+  //推荐下面这种获取方法,避免了查询不存在的存储返回null
+ 
 });
-const chartDom1 = ref(null);
-const xtitle=ref(null)
+const showTip = ref(false);
+const isshowTip = (val) => {
+  showTip.value = val;
+};
+const aboutDom = ref();
+const handleScroll = () => {
+  ifSee.value = localStorage.getItem("userFlag") ;
+  if (aboutDom.value.scrollTop > 2000 && !ifSee.value) {
+    isshowTip(true);
+  }
+};
+const xtitle = ref(null);
 const fetchData = () => {
   loadingP.value = true;
   axios
-    .get(
-      `${hostname}/chart?secucode=${picIndex.value}&report=${quarter.value}`
-    ) // 替换为您的API端点
+    .get(`${hostname}/chart?secucode=${picIndex.value}&report=${quarter.value}`) // 替换为您的API端点
     .then((response) => {
       chartData.value = response.data.stock_charts.charts; // 将获取到的数据存储到chartData中
-      xtitle.value=response.data.stock_charts.x
-      console.log(xtitle,'xtitle');
+      xtitle.value = response.data.stock_charts.x;
       // renderChart(); // 数据获取成功后调用渲染图表的方法
       loadingP.value = false;
     })
@@ -43,7 +61,6 @@ const fetchData = () => {
       loadingP.value = true;
     });
 };
-
 </script>
 <style lang="scss" scoped>
 .about {
@@ -52,6 +69,7 @@ const fetchData = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
 }
 .title {
   width: 100%;

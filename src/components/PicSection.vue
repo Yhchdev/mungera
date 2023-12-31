@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <b class="title">{{ chartData.name }}</b>
-    <div class="chart1" ref="chartDom1" :loading="loadingP"></div>
+    <div class="chart" ref="chartDom" :loading="loadingP"></div>
   </div>
 </template>
   <script setup>
@@ -11,7 +11,7 @@ import * as echarts from "echarts";
 import { useRoute } from "vue-router";
 const route = useRoute();
 const loadingP = ref(false);
-const chartDom1 = ref(null);
+const chartDom = ref(null);
 const title1 = ref();
 const props = defineProps({
   list: null,
@@ -24,7 +24,6 @@ const chartData = computed(() => {
 watch(
   () => props.list,
   (val) => {
-    console.log(val, "1111");
     if (val) {
       setTimeout(() => {
         renderChart();
@@ -35,10 +34,9 @@ watch(
 );
 const renderChart = () => {
   // 使用Echarts渲染图表
-  const chart1 = echarts.init(chartDom1.value); // 替换为您的图表容器ID
+  const chart = echarts.init(chartDom.value); // 替换为您的图表容器ID
   title1.value = chartData.value.name;
 
-  console.log(chart1);
   // 使用chartData.value填充图表数据
   let option1 = {
     tooltip: {
@@ -91,10 +89,10 @@ const renderChart = () => {
     })(),
   };
 
-  chart1.setOption(option1);
+  chart.setOption(option1);
 
   window.addEventListener("resize", function () {
-    chart1.resize();
+    chart.resize();
   });
 };
 </script>
@@ -120,10 +118,8 @@ const renderChart = () => {
   flex-direction: column;
   align-items: center;
 }
-.chart1,
-.chart2,
-.chart3,
-.chart4 {
+.chart
+ {
   width: 100%;
   height: 500px;
 }
