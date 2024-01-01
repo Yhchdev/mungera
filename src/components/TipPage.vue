@@ -25,16 +25,19 @@ const inputV = ref();
 const submit = () => {
   if (inputV.value === "shiniugu666") {
     emits("updateVisible", false);
-    const userFlag = ref();
-    localStorage.setItem("userFlag", "看过啦");
+    localStorage.setItem("deal", "看过啦");
+  } else {
+    console.log("111");
+    ElMessage({
+      message: "验证码输入错误",
+      type: "error",
+    });
   }
+  inputV.value = "";
 };
 </script>
-<style>
 
-</style>
 <style lang="scss" scoped>
-
 .submit {
   display: flex;
   padding: 0 10%;

@@ -40,7 +40,7 @@ const isshowTip = (val) => {
 };
 const aboutDom = ref();
 const handleScroll = () => {
-  ifSee.value = localStorage.getItem("userFlag") ;
+  ifSee.value = localStorage.getItem("deal") ;
   if (aboutDom.value.scrollTop > 2000 && !ifSee.value) {
     isshowTip(true);
   }

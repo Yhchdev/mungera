@@ -1,7 +1,7 @@
 <template>
   <div class="bar">
     <b class="title">{{ chartData.name }}</b>
-    <div class="chart" ref="chartDom" :loading="loadingP"></div>
+    <div class="chart" ref="chartDom" v-loading="loadingP"></div>
   </div>
 </template>
   <script setup>
@@ -10,7 +10,7 @@ import axios from "axios";
 import * as echarts from "echarts";
 import { useRoute } from "vue-router";
 const route = useRoute();
-const loadingP = ref(false);
+const loadingP = ref(true);
 const chartDom = ref(null);
 const title1 = ref();
 const props = defineProps({
@@ -32,6 +32,7 @@ watch(
   },
   { immediate: true }
 );
+
 const renderChart = () => {
   // 使用Echarts渲染图表
   const chart = echarts.init(chartDom.value); // 替换为您的图表容器ID
@@ -94,6 +95,7 @@ const renderChart = () => {
   window.addEventListener("resize", function () {
     chart.resize();
   });
+  loadingP.value = false;
 };
 </script>
   <style lang="scss" scoped>
@@ -118,8 +120,7 @@ const renderChart = () => {
   flex-direction: column;
   align-items: center;
 }
-.chart
- {
+.chart {
   width: 100%;
   height: 500px;
 }

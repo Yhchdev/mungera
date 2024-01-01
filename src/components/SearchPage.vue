@@ -4,41 +4,49 @@
       <div class="icon">
         <img src="../assets/icon.jpg" alt="" />
       </div>
+
       <div class="search">
-        <el-select
-          v-model="quarter"
-          value-key="value"
-          placeholder="Select"
-          class="selectcss"
-        >
-          <el-option
-            v-for="item in quarterList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          v-model="inputQ"
-          filterable
-          remote
-          reserve-keyword
-          placeholder="请输代码、名称或拼音缩写"
-          :remote-method="remoteMethod"
-          :loading="loading"
-          class="selectcss2"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <el-button :icon="Search" type="primary" @click="searchFun"
-          >搜索</el-button
-        >
+        <section>
+          <el-select
+            v-model="quarter"
+            value-key="value"
+            placeholder="Select"
+            class="selectcss"
+          >
+            <el-option
+              v-for="item in quarterList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <!--  -->
+
+          <div class="right">
+            <el-select
+              v-model="inputQ"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输代码、名称或拼音缩写"
+              :remote-method="remoteMethod"
+              :loading="loading"
+              class="selectcss2"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-button type="primary" @click="searchFun" style="width: 40px"
+              >搜索</el-button
+            >
+          </div>
+        </section>
       </div>
+
       <div class="hot">
         <h3>热门股票</h3>
         <span v-for="(item, index) in hotList" :key="index" @click="click(item)"
@@ -77,7 +85,19 @@ const quarter = ref("年报");
 
 onMounted(() => {
   getHot();
+  isSeePoint()
 });
+// 埋点
+var _hmt = _hmt || [];
+
+const isSeePoint=()=>{
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d1339e639b1e35f9a227f4617d7b54aa";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  console.log('2323');
+}
+
 const hotList = ref([]);
 const getHot = () => {
   axios
@@ -117,14 +137,16 @@ const searchFun = () => {
     path: "/pic",
     query: { id: inputQ.value, quarter: quarter.value },
   });
+  isSeePoint()
+  
 };
 const click = (i) => {
   router.push({
     path: "/pic",
     query: { id: i.value, quarter: "年报" },
   });
+  isSeePoint()
 };
-
 </script>
 <style lang="scss" scoped>
 .icon {
@@ -151,12 +173,12 @@ main {
   align-items: center;
 }
 .selectcss {
-  width: 20%;
+  width: 100px;
   margin-right: 2%;
 }
 .selectcss2 {
-  width: 40%;
-  margin-right: 2%;
+  width: calc(100% - 40px);
+  // margin-right: 2%;
 }
 @media screen and (max-width: 960px) {
   main {
@@ -175,13 +197,22 @@ main {
     width: 30%;
   }
 }
-
-.search {
+section {
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+.search {
+  width: 100%;
+  // display: flex;
+  // justify-content: space-between;
   padding-top: 10px;
   margin-bottom: 10%;
+}
+.right {
+  width: calc(100% - 40px);
+  display: flex;
+  justify-content: space-between;
 }
 .hot {
   height: 10%;
